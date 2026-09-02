@@ -12,35 +12,104 @@ st.set_page_config(
     layout="wide",
 )
 
-# --- 1. SISTEMA DE CONTRASEÑA ---
+# --- ESTILOS CSS FUTURISTAS (TIPO HOLOGRAMA / LOGIN) ---
+st.markdown(
+    """
+    <style>
+    /* Fondo general oscuro tecnológico */
+    .stApp {
+        background: radial-gradient(circle at center, #0B192C 0%, #030712 100%);
+        color: #00f0ff;
+    }
+    
+    /* Contenedor del panel holográfico */
+    .holo-card {
+        background: rgba(13, 27, 42, 0.75);
+        border: 2px solid #00f0ff;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2);
+        backdrop-filter: blur(10px);
+        max-width: 500px;
+        margin: auto;
+        text-align: center;
+    }
+
+    /* Títulos futuristas */
+    .holo-title {
+        font-family: 'Courier New', Courier, monospace;
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: bold;
+        letter-spacing: 4px;
+        text-shadow: 0 0 10px #00f0ff;
+        margin-bottom: 25px;
+    }
+
+    /* Estilo de los inputs */
+    stTextInput input {
+        background-color: rgba(3, 7, 18, 0.8) !important;
+        color: #00f0ff !important;
+        border: 1px solid #00f0ff !important;
+        border-radius: 10px !important;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
+# --- 1. SISTEMA DE CONTRASEÑA DINÁMICA ---
+if "password_sistema" not in st.session_state:
+    st.session_state.password_sistema = (
+        "asistencia2026"  # Contraseña inicial por defecto
+    )
+
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # Tarjeta futurista centrada
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("## 🔐 Acceso al Sistema de Asitencia UEB")
         st.markdown(
-            "Ingrese la contraseña personal para acceder al control de"
-            " asistencia."
+            """
+            <div class="holo-card">
+                <div class="holo-title">LOGIN - UEB</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
 
+        # Campos de texto y botón dentro de Streamlit para conservar interactividad
+        usuario_ingresado = st.text_input(
+            "USUARIO", placeholder="Ingrese usuario...", key="user_input"
+        )
         password_ingresada = st.text_input(
-            "Contraseña:", type="password", key="pwd_input"
+            "PASSWORD",
+            type="password",
+            placeholder="Ingrese contraseña...",
+            key="pwd_input",
         )
 
-        if st.button("Ingresar al Sistema", use_container_width=True):
-            # Puedes cambiar 'asistencia2026' por la contraseña que prefieras
-            if password_ingresada == "asistencia2026":
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("⭕ ENTER", use_container_width=True):
+            if (
+                password_ingresada == st.session_state.password_sistema
+                and usuario_ingresado != ""
+            ):
                 st.session_state.autenticado = True
                 st.rerun()
             else:
-                st.error("Contraseña incorrecta. Intente nuevamente.")
-    st.stop()  # Detiene la ejecución aquí hasta que ingresen la clave correcta
+                st.error("⚠️ Acceso denegado. Credenciales incorrectas.")
+    st.stop()  # Detiene la ejecución hasta que se autentique
 
 # --- 2. BARRA DE CARGA INICIAL ---
 if "cargado" not in st.session_state:
-    with st.spinner("Cargando módulos y base de datos de estudiantes..."):
+    with st.spinner(
+        "⚡ Inicializando matriz de datos y módulos holográficos..."
+    ):
         barra_progreso = st.progress(0)
         for i in range(100):
             time.sleep(0.01)
@@ -87,6 +156,17 @@ with st.sidebar:
     institucion = st.text_input(
         "Institución Educativa", value="Unidad Educativa Babahoyo"
     )
+
+    st.markdown("---")
+    st.subheader("🔑 Seguridad")
+    with st.expander("Cambiar Contraseña"):
+        nuevo_pass = st.text_input("Nueva Contraseña", type="password")
+        if st.button("Actualizar Clave"):
+            if nuevo_pass:
+                st.session_state.password_sistema = nuevo_pass
+                st.success("¡Contraseña actualizada con éxito!")
+            else:
+                st.warning("La contraseña no puede estar vacía.")
 
     st.markdown("---")
     st.header("📅 Selección de Fecha y Curso")
@@ -348,11 +428,10 @@ else:
 
     with col_d2:
         if st.button("📄 Generar Archivo PDF Oficial"):
-            # Clase PDF usando fpdf2
+
             class PDF(FPDF):
 
                 def header(self):
-                    # Membrete institucional
                     self.set_font("helvetica", "B", 14)
                     self.cell(
                         0,
@@ -388,7 +467,6 @@ else:
             pdf.add_page()
             pdf.set_auto_page_break(auto=True, margin=15)
 
-            # Datos informativos del docente
             pdf.set_font("helvetica", "B", 10)
             pdf.cell(
                 0,
@@ -407,12 +485,10 @@ else:
             )
             pdf.ln(5)
 
-            # Tabla de registros
             pdf.set_font("helvetica", "B", 9)
-            pdf.set_fill_color(44, 62, 80)  # Color oscuro institucional
+            pdf.set_fill_color(44, 62, 80)
             pdf.set_text_color(255, 255, 255)
 
-            # Ancho de columnas (Total ~190mm)
             col_widths = [22, 28, 65, 30, 45]
             headers = ["Fecha", "Curso", "Estudiante", "Estado", "Observación"]
 
@@ -462,7 +538,6 @@ else:
                 )
                 pdf.ln()
 
-            # Espacio para firma
             pdf.ln(20)
             pdf.set_font("helvetica", "B", 10)
             pdf.cell(
