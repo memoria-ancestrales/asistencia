@@ -19,9 +19,9 @@ if "autenticado" not in st.session_state:
 if not st.session_state.autenticado:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("## 🔐 Acceso al Sistema Institucional")
+        st.markdown("## 🔐 Acceso al Sistema de Asitencia UEB")
         st.markdown(
-            "Ingrese la contraseña institucional para acceder al control de"
+            "Ingrese la contraseña personal para acceder al control de"
             " asistencia."
         )
 
