@@ -17,7 +17,6 @@ st.set_page_config(
 CONFIG_FILE = "config_docente.json"
 
 def cargar_configuracion():
-    # Valores por defecto iniciales
     config_default = {
         "usuario_sistema": "1234567890",
         "password_sistema": "asistencia2026"
@@ -38,7 +37,6 @@ def guardar_configuracion(usuario, password):
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
 
-# Cargar credenciales persistentes al iniciar
 config_actual = cargar_configuracion()
 
 if "usuario_sistema" not in st.session_state:
@@ -73,6 +71,18 @@ st.markdown(
         max-width: 480px;
         margin: 10px auto;
         text-align: center;
+    }
+
+    /* Contenedor perfectamente centrado para el logo */
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .logo-container img {
+        width: 90px;
+        height: auto;
     }
 
     /* Estilo del título y subtítulo dentro de la tarjeta */
@@ -156,11 +166,19 @@ if not st.session_state.autenticado:
             unsafe_allow_html=True,
         )
 
-        # Mostrar el logo local perfectamente centrado dentro de la tarjeta
+        # Mostrar el logo local perfectamente centrado usando HTML puro sin contenedores de columnas vacías
         if os.path.exists("logo_ueb.png"):
-            col_img1, col_img2, col_img3 = st.columns([1, 1, 1])
-            with col_img2:
-                st.image("logo_ueb.png", width=90)
+            import base64
+            with open("logo_ueb.png", "rb") as img_file:
+                encoded_img = base64.b64encode(img_file.read()).decode()
+            st.markdown(
+                f"""
+                <div class="logo-container">
+                    <img src="data:image/png;base64,{encoded_img}" alt="Logo UEB">
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
         st.markdown(
             """
@@ -286,7 +304,6 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("🔑 Seguridad y Cuenta")
     
-    # Campo para actualizar la cédula y guardarla de forma permanente
     nueva_cedula = st.text_input("Número de Cédula", value=st.session_state.usuario_sistema)
     if nueva_cedula != st.session_state.usuario_sistema:
         st.session_state.usuario_sistema = nueva_cedula
@@ -299,7 +316,6 @@ with st.sidebar:
             if pass_actual == st.session_state.password_sistema:
                 if nuevo_pass:
                     st.session_state.password_sistema = nuevo_pass
-                    # Guardar cambios de forma permanente en el archivo json
                     guardar_configuracion(st.session_state.usuario_sistema, st.session_state.password_sistema)
                     st.success("¡Contraseña actualizada y guardada con éxito!")
                 else:
