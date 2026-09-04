@@ -7,51 +7,99 @@ import time
 
 # Configuración inicial de la página
 st.set_page_config(
-    page_title="Sistema de Asistencia e Incidencias",
-    page_icon="📋",
+    page_title="Sistema de Asistencia e Incidencias - UEB",
+    page_icon="🏫",
     layout="wide",
 )
 
-# --- ESTILOS CSS FUTURISTAS (TIPO HOLOGRAMA / LOGIN) ---
+# --- ESTILOS CSS PROFESIONALES (ESTILO INSTITUCIONAL UEB) ---
 st.markdown(
     """
     <style>
-    /* Fondo general oscuro tecnológico */
+    /* Fondo general azul marino corporativo */
     .stApp {
-        background: radial-gradient(circle at center, #0B192C 0%, #030712 100%);
-        color: #00f0ff;
+        background: linear-gradient(135deg, #071328 0%, #0B1D3A 100%);
+        color: #f1f5f9;
     }
     
-    /* Contenedor del panel holográfico */
-    .holo-card {
-        background: rgba(13, 27, 42, 0.75);
-        border: 2px solid #00f0ff;
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+
+    /* Tarjeta principal unificada */
+    .login-box {
+        background: #0B1D3A;
+        border: 2px solid rgba(245, 158, 11, 0.35);
         border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 0 25px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2);
-        backdrop-filter: blur(10px);
-        max-width: 500px;
-        margin: auto;
+        padding: 25px 45px 35px 45px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        max-width: 480px;
+        margin: 10px auto;
         text-align: center;
     }
 
-    /* Títulos futuristas */
-    .holo-title {
-        font-family: 'Courier New', Courier, monospace;
+    /* Estilo del título y subtítulo dentro de la tarjeta */
+    .login-title {
         color: #ffffff;
-        font-size: 32px;
-        font-weight: bold;
-        letter-spacing: 4px;
-        text-shadow: 0 0 10px #00f0ff;
-        margin-bottom: 25px;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-top: 5px;
+        margin-bottom: 2px;
+    }
+    .login-subtitle {
+        color: #94a3b8;
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
     }
 
-    /* Estilo de los inputs */
-    stTextInput input {
-        background-color: rgba(3, 7, 18, 0.8) !important;
-        color: #00f0ff !important;
-        border: 1px solid #00f0ff !important;
+    /* Etiquetas de campo */
+    .field-label {
+        text-align: left;
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    /* Personalización del botón de entrada (Dorado/Naranja elegante) */
+    div.stButton > button {
+        background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%) !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
         border-radius: 10px !important;
+        border: none !important;
+        padding: 10px !important;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
+        margin-top: 15px !important;
+    }
+    div.stButton > button:hover {
+        background: linear-gradient(90deg, #d97706 100%, #b45309 100%) !important;
+    }
+
+    /* Pie de tarjeta con iconos */
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    .footer-item {
+        text-align: center;
+        flex: 1;
+    }
+    .footer-title {
+        color: #f8fafc;
+        font-weight: bold;
+        display: block;
+        font-size: 11px;
     }
     </style>
 """,
@@ -68,33 +116,57 @@ if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # Tarjeta futurista centrada
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, col3 = st.columns([1, 1.4, 1])
     with col2:
         st.markdown(
             """
-            <div class="holo-card">
-                <div class="holo-title">LOGIN - UEB</div>
-            </div>
+            <div class="login-box">
             """,
             unsafe_allow_html=True,
         )
 
-        # Campos de texto y botón dentro de Streamlit para conservar interactividad
+        # Mostrar el logo local de forma centrada
+        if os.path.exists("logo_ueb.png"):
+            col_img1, col_img2, col_img3 = st.columns([1, 1.2, 1])
+            with col_img2:
+                st.image("logo_ueb.png", width=100)
+
+        st.markdown(
+            """
+                <div style="text-align: center; margin-top: 5px;">
+                    <div class="login-title">LOGIN - UEB</div>
+                    <div class="login-subtitle">ACCESO AL SISTEMA ACADÉMICO</div>
+                </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        st.markdown(
+            '<span class="field-label">👤 &nbsp; USUARIO</span>',
+            unsafe_allow_html=True,
+        )
         usuario_ingresado = st.text_input(
-            "USUARIO", placeholder="Ingrese usuario...", key="user_input"
+            "Usuario",
+            placeholder="Ingrese usuario...",
+            key="user_input",
+            label_visibility="collapsed",
+        )
+
+        st.markdown(
+            '<span class="field-label">🔒 &nbsp; PASSWORD</span>',
+            unsafe_allow_html=True,
         )
         password_ingresada = st.text_input(
-            "PASSWORD",
+            "Contraseña",
             type="password",
             placeholder="Ingrese contraseña...",
             key="pwd_input",
+            label_visibility="collapsed",
         )
 
-        st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("⭕ ENTER", use_container_width=True):
+        if st.button("➔ &nbsp; ENTRAR", use_container_width=True):
             if (
                 password_ingresada == st.session_state.password_sistema
                 and usuario_ingresado != ""
@@ -102,19 +174,41 @@ if not st.session_state.autenticado:
                 st.session_state.autenticado = True
                 st.rerun()
             else:
-                st.error("⚠️ Acceso denegado. Credenciales incorrectas.")
-    st.stop()  # Detiene la ejecución hasta que se autentique
+                st.error("⚠️ Credenciales incorrectas. Verifique los datos.")
+
+        st.markdown(
+            """
+                <div class="card-footer">
+                    <div class="footer-item">
+                        <span class="footer-title">🛡️ SEGURO</span>
+                        <span>Datos protegidos</span>
+                    </div>
+                    <div class="footer-item">
+                        <span class="footer-title">🎓 CONFIABLE</span>
+                        <span>Sistema académico UEB</span>
+                    </div>
+                    <div class="footer-item">
+                        <span class="footer-title">🕒 24/7</span>
+                        <span>Disponible siempre</span>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; color: #64748b; font-size: 11px; margin-top: 15px; letter-spacing: 0.5px;">
+                🔒 &nbsp; SISTEMA ACADÉMICO UEB<br>Unidad Educativa Babahoyo
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    st.stop()
 
 # --- 2. BARRA DE CARGA INICIAL ---
 if "cargado" not in st.session_state:
-    with st.spinner(
-        "⚡ Inicializando matriz de datos y módulos holográficos..."
-    ):
+    with st.spinner("⚡ Conectando con los servidores de la institución..."):
         barra_progreso = st.progress(0)
         for i in range(100):
             time.sleep(0.01)
             barra_progreso.progress(i + 1)
-        time.sleep(0.3)
+        time.sleep(0.2)
     st.session_state.cargado = True
     st.rerun()
 
@@ -171,7 +265,6 @@ with st.sidebar:
     st.markdown("---")
     st.header("📅 Selección de Fecha y Curso")
 
-    # Selector de fecha para pase o consulta de días pasados
     fecha_pase = st.date_input("Fecha de Registro / Consulta", datetime.now())
     fecha_str = fecha_pase.strftime("%Y-%m-%d")
 
