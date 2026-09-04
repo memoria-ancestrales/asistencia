@@ -106,11 +106,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- 1. SISTEMA DE CONTRASEÑA DINÁMICA ---
+# --- 1. SISTEMA DE CREDENCIALES DINÁMICAS (CÉDULA Y CONTRASEÑA) ---
+if "usuario_sistema" not in st.session_state:
+    st.session_state.usuario_sistema = "1234567890"  # Número de cédula por defecto
+
 if "password_sistema" not in st.session_state:
-    st.session_state.password_sistema = (
-        "asistencia2026"  # Contraseña inicial por defecto
-    )
+    st.session_state.password_sistema = "asistencia2026"  # Contraseña inicial por defecto
 
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
@@ -144,12 +145,12 @@ if not st.session_state.autenticado:
         )
 
         st.markdown(
-            '<span class="field-label">👤 &nbsp; USUARIO</span>',
+            '<span class="field-label">🆔 &nbsp; NÚMERO DE CÉDULA</span>',
             unsafe_allow_html=True,
         )
         usuario_ingresado = st.text_input(
-            "Usuario",
-            placeholder="Ingrese usuario...",
+            "Cédula",
+            placeholder="Ingrese su número de cédula...",
             key="user_input",
             label_visibility="collapsed",
         )
@@ -168,13 +169,13 @@ if not st.session_state.autenticado:
 
         if st.button("➔ &nbsp; ENTRAR", use_container_width=True):
             if (
-                password_ingresada == st.session_state.password_sistema
-                and usuario_ingresado != ""
+                usuario_ingresado == st.session_state.usuario_sistema
+                and password_ingresada == st.session_state.password_sistema
             ):
                 st.session_state.autenticado = True
                 st.rerun()
             else:
-                st.error("⚠️ Credenciales incorrectas. Verifique los datos.")
+                st.error("⚠️ Cédula o contraseña incorrectas. Verifique los datos.")
 
         st.markdown(
             """
@@ -255,15 +256,25 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.subheader("🔑 Seguridad")
+    st.subheader("🔑 Seguridad y Cuenta")
+    
+    # Campo para configurar el número de cédula del docente directamente desde la sesión
+    nueva_cedula = st.text_input("Número de Cédula", value=st.session_state.usuario_sistema)
+    if nueva_cedula != st.session_state.usuario_sistema:
+        st.session_state.usuario_sistema = nueva_cedula
+
     with st.expander("Cambiar Contraseña"):
-        nuevo_pass = st.text_input("Nueva Contraseña", type="password")
+        pass_actual = st.text_input("Contraseña Actual", type="password", key="p_act")
+        nuevo_pass = st.text_input("Nueva Contraseña", type="password", key="p_nue")
         if st.button("Actualizar Clave"):
-            if nuevo_pass:
-                st.session_state.password_sistema = nuevo_pass
-                st.success("¡Contraseña actualizada con éxito!")
+            if pass_actual == st.session_state.password_sistema:
+                if nuevo_pass:
+                    st.session_state.password_sistema = nuevo_pass
+                    st.success("¡Contraseña actualizada con éxito! Ahora debe usar esta nueva clave.")
+                else:
+                    st.warning("La nueva contraseña no puede estar vacía.")
             else:
-                st.warning("La contraseña no puede estar vacía.")
+                st.error("⚠️ La contraseña actual no es correcta.")
 
     st.markdown("---")
     st.header("📅 Selección de Fecha y Curso")
