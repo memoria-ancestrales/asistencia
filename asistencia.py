@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 import os
 from fpdf import FPDF
 import pandas as pd
@@ -11,6 +12,43 @@ st.set_page_config(
     page_icon="🏫",
     layout="wide",
 )
+
+# --- ARCHIVO DE CONFIGURACIÓN PERSISTENTE ---
+CONFIG_FILE = "config_docente.json"
+
+def cargar_configuracion():
+    # Valores por defecto iniciales
+    config_default = {
+        "usuario_sistema": "1234567890",
+        "password_sistema": "asistencia2026"
+    }
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return config_default
+    return config_default
+
+def guardar_configuracion(usuario, password):
+    config = {
+        "usuario_sistema": usuario,
+        "password_sistema": password
+    }
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+        json.dump(config, f, ensure_ascii=False, indent=4)
+
+# Cargar credenciales persistentes al iniciar
+config_actual = cargar_configuracion()
+
+if "usuario_sistema" not in st.session_state:
+    st.session_state.usuario_sistema = config_actual["usuario_sistema"]
+
+if "password_sistema" not in st.session_state:
+    st.session_state.password_sistema = config_actual["password_sistema"]
+
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
 
 # --- ESTILOS CSS PROFESIONALES (ESTILO INSTITUCIONAL UEB) ---
 st.markdown(
@@ -105,16 +143,6 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
-
-# --- 1. SISTEMA DE CREDENCIALES DINÁMICAS (CÉDULA Y CONTRASEÑA) ---
-if "usuario_sistema" not in st.session_state:
-    st.session_state.usuario_sistema = "1234567890"  # Número de cédula por defecto
-
-if "password_sistema" not in st.session_state:
-    st.session_state.password_sistema = "asistencia2026"  # Contraseña inicial por defecto
-
-if "autenticado" not in st.session_state:
-    st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
     st.markdown("<br>", unsafe_allow_html=True)
@@ -258,10 +286,11 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("🔑 Seguridad y Cuenta")
     
-    # Campo para configurar el número de cédula del docente directamente desde la sesión
+    # Campo para actualizar la cédula y guardarla de forma permanente
     nueva_cedula = st.text_input("Número de Cédula", value=st.session_state.usuario_sistema)
     if nueva_cedula != st.session_state.usuario_sistema:
         st.session_state.usuario_sistema = nueva_cedula
+        guardar_configuracion(st.session_state.usuario_sistema, st.session_state.password_sistema)
 
     with st.expander("Cambiar Contraseña"):
         pass_actual = st.text_input("Contraseña Actual", type="password", key="p_act")
@@ -270,7 +299,9 @@ with st.sidebar:
             if pass_actual == st.session_state.password_sistema:
                 if nuevo_pass:
                     st.session_state.password_sistema = nuevo_pass
-                    st.success("¡Contraseña actualizada con éxito! Ahora debe usar esta nueva clave.")
+                    # Guardar cambios de forma permanente en el archivo json
+                    guardar_configuracion(st.session_state.usuario_sistema, st.session_state.password_sistema)
+                    st.success("¡Contraseña actualizada y guardada con éxito!")
                 else:
                     st.warning("La nueva contraseña no puede estar vacía.")
             else:
