@@ -127,11 +127,11 @@ if not st.session_state.autenticado:
             unsafe_allow_html=True,
         )
 
-        # Mostrar el logo local de forma centrada
+        # Mostrar el logo local perfectamente centrado dentro de la tarjeta
         if os.path.exists("logo_ueb.png"):
-            col_img1, col_img2, col_img3 = st.columns([1, 1.2, 1])
+            col_img1, col_img2, col_img3 = st.columns([1, 1, 1])
             with col_img2:
-                st.image("logo_ueb.png", width=100)
+                st.image("logo_ueb.png", width=90)
 
         st.markdown(
             """
@@ -239,6 +239,9 @@ if os.path.exists(archivo_excel):
 
 # --- PANEL LATERAL: CONFIGURACIÓN Y DATOS DEL DOCENTE ---
 with st.sidebar:
+    if os.path.exists("logo_ueb.png"):
+        st.image("logo_ueb.png", width=120)
+
     st.header("⚙️ Configuración del Docente")
 
     docente_nombre = st.text_input(
@@ -525,6 +528,9 @@ else:
             class PDF(FPDF):
 
                 def header(self):
+                    if os.path.exists("logo_ueb.png"):
+                        self.image("logo_ueb.png", 10, 8, 22)
+                    
                     self.set_font("helvetica", "B", 14)
                     self.cell(
                         0,
