@@ -48,29 +48,33 @@ if "password_sistema" not in st.session_state:
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
-# --- ESTILOS CSS PROFESIONALES (ESTILO INSTITUCIONAL UEB) ---
+# --- ESTILOS CSS PROFESIONALES CON IMAGEN DE FONDO Y TARJETA AZUL ---
 st.markdown(
     """
     <style>
-    /* Fondo general azul marino corporativo */
+    /* Fondo con la imagen institucional y capa oscura semitransparente */
     .stApp {
-        background: linear-gradient(135deg, #071328 0%, #0B1D3A 100%);
+        background: linear-gradient(rgba(7, 19, 40, 0.85), rgba(11, 29, 58, 0.90)), url("fondo_ueb.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         color: #f1f5f9;
     }
     
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* Tarjeta principal unificada */
+    /* Tarjeta principal unificada (Cuadro azul institucional con borde dorado sutil) */
     .login-box {
-        background: #0B1D3A;
+        background: rgba(11, 29, 58, 0.95);
         border: 2px solid rgba(245, 158, 11, 0.35);
         border-radius: 20px;
         padding: 30px 45px 35px 45px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
         max-width: 480px;
         margin: 0 auto;
         text-align: center;
+        backdrop-filter: blur(10px);
     }
 
     /* Contenedor del logo perfectamente centrado */
@@ -235,7 +239,7 @@ if not st.session_state.autenticado:
                     </div>
                 </div>
             </div>
-            <div style="text-align: center; color: #64748b; font-size: 11px; margin-top: 20px; letter-spacing: 0.5px;">
+            <div style="text-align: center; color: #94a3b8; font-size: 11px; margin-top: 20px; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
                 🔒 &nbsp; SISTEMA ACADÉMICO UEB<br>Unidad Educativa Babahoyo
             </div>
             """,
