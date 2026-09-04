@@ -66,22 +66,22 @@ st.markdown(
         background: #0B1D3A;
         border: 2px solid rgba(245, 158, 11, 0.35);
         border-radius: 20px;
-        padding: 25px 45px 35px 45px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        padding: 30px 45px 35px 45px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
         max-width: 480px;
-        margin: 10px auto;
+        margin: 0 auto;
         text-align: center;
     }
 
-    /* Contenedor perfectamente centrado para el logo */
+    /* Contenedor del logo perfectamente centrado */
     .logo-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
     .logo-container img {
-        width: 90px;
+        width: 100px;
         height: auto;
     }
 
@@ -99,10 +99,10 @@ st.markdown(
         font-size: 10px;
         letter-spacing: 2.5px;
         text-transform: uppercase;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
 
-    /* Etiquetas de campo */
+    /* Etiquetas de campo limpias */
     .field-label {
         text-align: left;
         color: #94a3b8;
@@ -123,7 +123,7 @@ st.markdown(
         border: none !important;
         padding: 10px !important;
         box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
-        margin-top: 15px !important;
+        margin-top: 20px !important;
     }
     div.stButton > button:hover {
         background: linear-gradient(90deg, #d97706 100%, #b45309 100%) !important;
@@ -157,16 +157,11 @@ st.markdown(
 if not st.session_state.autenticado:
     st.markdown("<br>", unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1, 1.4, 1])
+    col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
-        st.markdown(
-            """
-            <div class="login-box">
-            """,
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
-        # Mostrar el logo local perfectamente centrado usando HTML puro sin contenedores de columnas vacías
+        # Logo centrado limpio usando Base64
         if os.path.exists("logo_ueb.png"):
             import base64
             with open("logo_ueb.png", "rb") as img_file:
@@ -182,7 +177,7 @@ if not st.session_state.autenticado:
 
         st.markdown(
             """
-                <div style="text-align: center; margin-top: 5px;">
+                <div style="text-align: center;">
                     <div class="login-title">LOGIN - UEB</div>
                     <div class="login-subtitle">ACCESO AL SISTEMA ACADÉMICO</div>
                 </div>
@@ -235,12 +230,12 @@ if not st.session_state.autenticado:
                         <span>Sistema académico UEB</span>
                     </div>
                     <div class="footer-item">
-                        <span class="footer-title">🕒 24/7</span>
+                        <span class="footer-title">🕒 ACCESO 24/7</span>
                         <span>Disponible siempre</span>
                     </div>
                 </div>
             </div>
-            <div style="text-align: center; color: #64748b; font-size: 11px; margin-top: 15px; letter-spacing: 0.5px;">
+            <div style="text-align: center; color: #64748b; font-size: 11px; margin-top: 20px; letter-spacing: 0.5px;">
                 🔒 &nbsp; SISTEMA ACADÉMICO UEB<br>Unidad Educativa Babahoyo
             </div>
             """,
